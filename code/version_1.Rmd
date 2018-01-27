@@ -1,0 +1,50 @@
+---
+title: "module1"
+author: "Lan Wang"
+date: "2018年1月27日"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+########### Linear regression ###
+dat = read.csv("BodyFat.csv")
+dat1 = dat[,-1]
+rg_1 = lm(BODYFAT~.-BODYFAT,data = dat1)
+rg_2 = lm(BODYFAT~.-BODYFAT-DENSITY,data = dat1)
+rg_3 = lm(DENSITY~.-BODYFAT-DENSITY,data = dat1)
+
+summary(rg_1)
+plot(rg_1)
+summary(rg_2)
+plot(rg_2)
+summary(rg_3)
+plot(rg_3)
+```
+
+- fat ~ other variables will have the biggest r-square. Some variables like ABDOMEN, WRIST, FOREARM, NECK, AGE are significant. Diagnosis plot shows this model satisfies linearity assumption, normality assumption and equal variance assumption.
+
+- What I can do to improve this model are: 1. Simplify this model by step-wise method -- variable selection. 2. Try ridge regression, lasso regression to see if they're better. Use AIC and BIC measurement. 3. Try GAM and GLM model to see changing form of independent variables would help or not....To be added....
+
+```{r}
+library(MASS)
+step1 <- stepAIC(rg_2, direction="both")
+step1$anova
+#AGE WEIGHT NECK ABDOMEN HIP THIGH FOREARM WRIST
+
+library(leaps)
+step2 = regsubsets(BODYFAT~.-BODYFAT-DENSITY,data = dat1,nbest = 1)
+summary(step2)
+plot(step2,scale = "bic")
+#WEIGHT ABDOMEN FOREARM WRIST
+
+rg_3 = lm(BODYFAT~AGE+WEIGHT+NECK+ABDOMEN+HIP+THIGH+FOREARM+WRIST,data = dat1)
+rg_4 = lm(BODYFAT~WEIGHT+ABDOMEN+FOREARM+WRIST,data = dat1)
+summary(rg_3)
+summary(rg_4)
+```
+
+- R-square in the best model chosen by AIC gives a bigger adjusted R-square than the original model. It also decrease the total number of variables from 14 to 8. What's more, it includes AGE and ABDOMEN, which are mentioned in DataDescription.docx. 
