@@ -1,0 +1,32 @@
+---
+title: "STAT628"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Outline
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+## Overall Finding
+
+## Visualization
+
+```{r pressure}
+plot(pressure)
+```
+
+## Explaratory Analysis & Data Cleaning
+
+## Models
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+
+
