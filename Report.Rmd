@@ -26,9 +26,8 @@ where $x$ is ... and $y$ is ...
 BodyFat <- read.csv("./data/BodyFat.csv"); attach(BodyFat)
 ```
 
-We will build a linear model to get the numerical result for the body fat estimation. 
 
-Thus the outcome is `BODYFAT` (If not valid, can be approximately translated from `DENSITY`)[@Siri]
+To get the numerical result for the body fat estimation, we consider the outcome as `BODYFAT` (If not valid, can be approximately translated from `DENSITY`)
 
 ### Invalid observation, Outlier and Influential Points
 
