@@ -35,16 +35,20 @@ plot(rg_2)
 library(MASS)
 step1 <- stepAIC(rg_2, direction="both")
 step1$anova
+#With No.39
 #AGE WEIGHT NECK ABDOMEN HIP THIGH FOREARM WRIST
+#Without No.39
+#AGE ADIPOSITY NECK CHEST ABDOMEN HIP FOREARM WRIST
 
-library(leaps)
-step2 = regsubsets(BODYFAT~.-BODYFAT-DENSITY,data = dat1,nbest = 1)
-summary(step2)
-plot(step2,scale = "bic")
-#WEIGHT ABDOMEN WRIST
+step(rg_2,k=log(249))
 
-rg_3 = lm(BODYFAT~AGE+WEIGHT+NECK+ABDOMEN+HIP+THIGH+FOREARM+WRIST,data = dat1)
-rg_4 = lm(BODYFAT~WEIGHT+ABDOMEN+WRIST,data = dat1)
+#With No.39
+#WEIGHT ABDOMEN FOREARM WRIST
+#Without 39
+#AGE ADIPOSITY CHEST ABDOMEN WRIST
+
+rg_3 = lm(BODYFAT~AGE+ADIPOSITY+NECK+CHEST+ABDOMEN+HIP+FOREARM+WRIST,data = dat1)
+rg_4 = lm(BODYFAT~AGE+ADIPOSITY+CHEST+ABDOMEN+WRIST,data = dat1)
 summary(rg_3)
 plot(rg_3)
 summary(rg_4)
