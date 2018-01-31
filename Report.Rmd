@@ -33,7 +33,9 @@ Thus the outcome is `BODYFAT` (If not valid, can be approximately translated fro
 ### Invalid observation, Outlier and Influential Points
 
 ```{r}
-plot(sort(BODYFAT),xlab = "", ylab = "Body Fat")
+# options(repr.plot.width=8, repr.plot.height=4)
+# plot(sort(BODYFAT),xlab = "", ylab = "Body Fat")
+summary(BODYFAT)
 ```
 
 By analysising the `BODYFAT` variable, we can see that the `ID=182` and `ID=216` observations have extreme values of body fat, seperately 0 and 45.1.
