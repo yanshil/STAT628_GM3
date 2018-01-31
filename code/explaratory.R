@@ -43,7 +43,7 @@ plot(fit, which=4) ## Cook's distance
 
 d[42,] # Height = 29.5 in = 74.93 cm;   92.98 kg
 d[39,] # Weight = 363.15 lbs = 164.72 kg (May make sense)
-> d[39,] # Weight = 363.15 lbs = 164.72 kg (May make sense)
+d[39,] # Weight = 363.15 lbs = 164.72 kg (May make sense)
 # IDNO BODYFAT DENSITY AGE WEIGHT HEIGHT ADIPOSITY NECK CHEST ABDOMEN   HIP THIGH KNEE ANKLE BICEPS FOREARM
 # 39   39    33.8  1.0202  46 363.15  72.25      48.9 51.2 136.2   148.1 147.7  87.3 49.1  29.6     45      29
 # WRIST
@@ -63,16 +63,10 @@ summary(d)
 
 d <- d[-42,]
 
-### Background Reading
-## Prior
-# Wrist and Knee aner not good measurement
-# The picture
+## Prior?
+## Wrist and Knee are not good measurement ?
 
 # Check Influential point (By histogram)
 ## Age = 80
 ## Weight > 350
 ## Knee > 48
-
-
-
-### Example usage
