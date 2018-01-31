@@ -1,0 +1,65 @@
+---
+title: "step-regression"
+author: "Lan Wang"
+date: "2018年1月30日"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+layout(matrix(c(1,2,3,4),nrow = 2))
+dat = read.csv("BodyFat.csv")
+dat1 = dat[-c(39,42,182),-1]
+#rg_1 = lm(BODYFAT~.-BODYFAT,data = dat1)
+rg_2 = lm(BODYFAT~.-BODYFAT-DENSITY,data = dat1)
+#rg_3 = lm(DENSITY~.-BODYFAT-DENSITY,data = dat1)
+
+#summary(rg_1)
+#plot(rg_1)
+summary(rg_2)
+plot(rg_2)
+#summary(rg_3)
+#plot(rg_3)
+```
+
+- From the outcome of regression, we get an adjusted R-square of 0.7279. AGE, NECK, ABDOMEN, FOREARM and WRIST are significant variables. Since we introduced more than 10 independent variables, it's necessary to simplify model and choose important variables. So we use stepwise method to do variable selection.
+
+
+
+```{r}
+library(MASS)
+step1 <- stepAIC(rg_2, direction="both")
+step1$anova
+#AGE WEIGHT NECK ABDOMEN HIP THIGH FOREARM WRIST
+
+library(leaps)
+step2 = regsubsets(BODYFAT~.-BODYFAT-DENSITY,data = dat1,nbest = 1)
+summary(step2)
+plot(step2,scale = "bic")
+#WEIGHT ABDOMEN WRIST
+
+rg_3 = lm(BODYFAT~AGE+WEIGHT+NECK+ABDOMEN+HIP+THIGH+FOREARM+WRIST,data = dat1)
+rg_4 = lm(BODYFAT~WEIGHT+ABDOMEN+WRIST,data = dat1)
+summary(rg_3)
+plot(rg_3)
+summary(rg_4)
+plot(rg_4)
+
+```
+
+- Use BIC and AIC rule to choose variables, because BIC put more penalty to number of independent variables, so BIC chose less variables than AIC did. What's more, these two models have similar adjusted R-square and similar diagnosis plots. Both of them have cloud-like residual versus fitted values plot, most points are on the diagnol line of QQ-plot and all the cook distances is smaller than 0.5. Based on Occam's Razor principle, we chose the best model given by BIC rule, which is $$Bodyfat = -31-0.126*WEIGHT+0.916*ABDOMEN+0.433*FOREARM-1.349*WRIST$$
+
+```{r}
+confint(rg_4)
+```
+
+
+
+
+
+
