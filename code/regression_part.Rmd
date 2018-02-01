@@ -12,58 +12,71 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-layout(matrix(c(1,2,3,4),nrow = 2))
 dat = read.csv("BodyFat.csv")
-dat1 = dat[-c(39,42,182),-1]
-#rg_1 = lm(BODYFAT~.-BODYFAT,data = dat1)
-rg_2 = lm(BODYFAT~.-BODYFAT-DENSITY,data = dat1)
-#rg_3 = lm(DENSITY~.-BODYFAT-DENSITY,data = dat1)
-
-#summary(rg_1)
-#plot(rg_1)
-summary(rg_2)
-plot(rg_2)
-#summary(rg_3)
-#plot(rg_3)
+datset = dat[-c(39,42,182),-c(1,3)]
+dim(datset)
 ```
 
-- From the outcome of regression, we get an adjusted R-square of 0.7279. AGE, NECK, ABDOMEN, FOREARM and WRIST are significant variables. Since we introduced more than 10 independent variables, it's necessary to simplify model and choose important variables. So we use stepwise method to do variable selection.
+```{r}
+rg_full = lm(BODYFAT~.,data = datset)
+par(mfrow=c(2,2))
+plot(rg_full)
+```
+
+
+- From the outcome of regression, we get an adjusted R-square of 0.7322. AGE, ABDOMEN and WRIST are significant variables. Since we introduced 14 independent variables, it's necessary to simplify model and choose important variables. So we use stepwise method to do variable selection.
 
 
 
 ```{r}
 library(MASS)
-step1 <- stepAIC(rg_2, direction="both")
-step1$anova
-#With No.39
-#AGE WEIGHT NECK ABDOMEN HIP THIGH FOREARM WRIST
-#Without No.39
-#AGE ADIPOSITY NECK CHEST ABDOMEN HIP FOREARM WRIST
+base<-lm(BODYFAT~1,data=datset)
+base.AIC<-step(base,direction="both",scope=list(lower=~1,upper=rg_full),trace=F)
+base.BIC<-step(base,direction="both",scope=list(lower=~1,upper=rg_full),trace=F,k=log(dim(datset)[1]))
 
-step(rg_2,k=log(249))
-
-#With No.39
-#WEIGHT ABDOMEN FOREARM WRIST
-#Without 39
-#AGE ADIPOSITY CHEST ABDOMEN WRIST
-
-rg_3 = lm(BODYFAT~AGE+ADIPOSITY+NECK+CHEST+ABDOMEN+HIP+FOREARM+WRIST,data = dat1)
-rg_4 = lm(BODYFAT~AGE+ADIPOSITY+CHEST+ABDOMEN+WRIST,data = dat1)
-summary(rg_3)
-plot(rg_3)
-summary(rg_4)
-plot(rg_4)
-
+summary(base.AIC)
+summary(base.BIC)
 ```
 
-- Use BIC and AIC rule to choose variables, because BIC put more penalty to number of independent variables, so BIC chose less variables than AIC did. What's more, these two models have similar adjusted R-square and similar diagnosis plots. Both of them have cloud-like residual versus fitted values plot, most points are on the diagnol line of QQ-plot and all the cook distances is smaller than 0.5. Based on Occam's Razor principle, we chose the best model given by BIC rule, which is $$Bodyfat = -31-0.126*WEIGHT+0.916*ABDOMEN+0.433*FOREARM-1.349*WRIST$$
+
+
 
 ```{r}
-confint(rg_4)
+par(mfrow = c(2,2))
+plot(base.AIC,which = 1,main = "AIC residual plot")
+plot(base.BIC,which = 1,main = "BIC residual plot")
+plot(base.AIC,which = 3,main = "AIC standardized residual plot")
+plot(base.BIC,which = 3,main = "BIC standardized residual plot")
+par(mfrow=c(1,2))
+plot(base.AIC,which = 2,main = "AIC residual QQ plot")
+plot(base.BIC,which = 2,main = "BIC residual QQ plot")
+par(mfrow = c(2,2))
+plot(base.AIC,which = 4,main = "AIC influencial points: Cook distance")
+plot(base.BIC,which = 4,main = "BIC influencial points: Cook distance")
+plot(base.AIC,which = 5,main = "AIC influencial points: leverage")
+plot(base.BIC,which = 5,main = "BIC influencial points: leverage")
+par(mfrow=c(1,1))
 ```
 
+- Use BIC and AIC rule to choose variables, because BIC put more penalty to number of independent variables, so BIC chose less variables than AIC did. The best model of AIC is $$BODYFAT = -23.72+0.84*ABDOMEN-0.085*WEIGHT-1.66*WRIST+0.28*BICEPS+0.039*AGE$$
+
+The best model of BIC is $$BODYFAT = -23.99+0.88*ABDOMEN-0.087*WEIGHT-1.28*WRIST$$
+These two models have similar adjusted R-square, which are 0.7301 and 0.7259. 
+
+- From aspect of residual plots, points're symmetrically distributed,  clustered towards the middle of the plot, and didn't have clear patterns in both models. This means no information remains in the residuals and assumption of equal variance is satisfied in both models.
+
+- From aspect of QQ-plots, most points are on the diagnol line of QQ-plot in both models. This means normal distribution assumption is also satisfied in both models.
+
+- From aspect of Cook's distance and leverage of all observations, we can see 54, 81 and 250 are relatively high influential points in the best model of AIC, while 81,221 and 250 are relatively high influential points in the best model of BIC. However, after we deleted those points and use stepwise method again, they won't change chosen variables. What's more, there's nothing abnormal about those high influential points after we checked their values. So we decided to keep them.
+
+- Based on Occam's Razor principle, we chose the best model given by BIC rule, which is $$BODYFAT = -23.99+0.88*ABDOMEN-0.087*WEIGHT-1.28*WRIST$$.
 
 
+
+```{r}
+predict(base.BIC,newdata=data.frame(ABDOMEN=90,WEIGHT=170,WRIST=18),interval="predict")
+confint(base.BIC)
+```
 
 
 
