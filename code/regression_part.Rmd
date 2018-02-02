@@ -1,26 +1,15 @@
 ---
-title: "step-regression"
+title: "diagnosis_part"
 author: "Lan Wang"
-date: "2018年1月30日"
+date: "2018年2月1日"
 output: html_document
-editor_options: 
-  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r}
 dat = read.csv("BodyFat.csv")
 datset = dat[-c(39,42,182),-c(1,3)]
-dim(datset)
-```
-
-```{r}
 rg_full = lm(BODYFAT~.,data = datset)
-par(mfrow=c(2,2))
-plot(rg_full)
 ```
 
 
@@ -29,54 +18,101 @@ plot(rg_full)
 
 
 ```{r}
-library(MASS)
 base<-lm(BODYFAT~1,data=datset)
-base.AIC<-step(base,direction="both",scope=list(lower=~1,upper=rg_full),trace=F)
-base.BIC<-step(base,direction="both",scope=list(lower=~1,upper=rg_full),trace=F,k=log(dim(datset)[1]))
+model.AIC<-step(rg_full,direction="backward",k=2,trace = 0)
+model.BIC<-step(rg_full,direction="backward",k=log(dim(datset)[1]),trace = 0)
 
-summary(base.AIC)
-summary(base.BIC)
+base.AIC<-step(base,direction="both",scope=list(lower=~1,upper=rg_full),trace=0)
+base.BIC<-step(base,direction="both",scope=list(lower=~1,upper=rg_full),trace=0,k=log(dim(datset)[1]))
+
+base.AIC.forward<-step(base,direction="forward",scope=list(lower=~1,upper=rg_full),trace=0)
+base.BIC.forward<-step(base,direction="forward",scope=list(lower=~1,upper=rg_full),trace=0,k=log(dim(datset)[1]))
+
+AIC.choice<-c(1,4,5,6,7,8,13,14)
+BIC.choice<-c(1,4,6,7,14)
+AIC.base.choice<-c(1,2,7,12,14)
+BIC.base.choice<-c(2,7,14)
+#summary(model.AIC)
+#summary(model.BIC)
+#summary(base.AIC)
+#summary(base.BIC)
+#colnames(datset)[BIC.base.choice+1]
+
 ```
+We applied backwards,forwards,stepwise selection to reduct variables number. The stepwise and forwards result are same.
+Also the criteria for this selection method is AIC and BIC. AIC and BIC is an index which combine balancing goodness of fit and model complexity. Higher AIC(BIC) means bad model fitting or complexity is too high. The table below shows the result for these model.
 
+|model|    method     |                    variables                     |Multiple $R^2$|adjusted $R^2$| RSE |
+|-----|---------------|--------------------------------------------------|--------------|--------------|-----|
+| m1  |backwards (AIC)|AGE,ADIPOSITY,NECK,CHEST,ABDOMEN,HIP,FOREARM,WRIST|  0.7433      |0.7347        |3.916|
+| m2  |backwards (BIC)|AGE,ADIPOSITY,CHEST,ABDOMEN,WRIST                 |  0.7354      |0.7299        |3.951|
+| m3  |stepwise  (AIC)|AGE,ABDOMEN,WEIGHT,WRIST,BICEPS                   |  0.7356      |0.7301        |3.95 |
+| m4  |stepwise  (BIC)|ABDOMEN,WEIGHT,WRIST                              |  0.7292      |0.7259        |3.981| 
 
+From the table we can recognize,although the m4 has minimum multiple $R^2$ and adjusted $R^2$, and has highest RSE,m4 has the simplest form and minimum variable number.According the Occam Razor priciple, we choose m4 as our final model format.
+The final model format is $$BODYFAT = -23.99+0.88*ABDOMEN-0.087*WEIGHT-1.28*WRIST$$. 
+The scale of these variable is:cm(ABDOMEN), cm(WRIST),lbs(WEIGHT).
+The variable estimated coefficient and standard errors and p value are showing below.
+The ABDOMEN has positive relationship with bodyfat. Every 1cm ABDOMEN increase indicate 0.88476 bodyfat increment.
+The WEIGHT and WRIST has negative relationship with bodyfat.Every 1cm WEIGHT increase indicate -0.08678 bodyfat decrement.Every 1cm WRIST increase indicate -1.28161 bodyfat decrement
+From the p-value we can know all the variable is siginificantly from zero. 
+
+| variable | Est.coefficient |Std. Error | P-value |
+|----------|-----------------|-----------|---------|
+|Intercept |     -23.99356   |   6.23603 | 0.000152|
+|ABDOMEN   |      0.88476    |  0.05108  |< 2e-16  |
+|WEIGHT    |      -0.08678   |   0.02234 |0.000132 |
+|WRIST     |      -1.28161   |   0.40274 | 0.001650|
 
 
 ```{r}
 par(mfrow = c(2,2))
-plot(base.AIC,which = 1,main = "AIC residual plot")
-plot(base.BIC,which = 1,main = "BIC residual plot")
-plot(base.AIC,which = 3,main = "AIC standardized residual plot")
-plot(base.BIC,which = 3,main = "BIC standardized residual plot")
-par(mfrow=c(1,2))
-plot(base.AIC,which = 2,main = "AIC residual QQ plot")
-plot(base.BIC,which = 2,main = "BIC residual QQ plot")
-par(mfrow = c(2,2))
-plot(base.AIC,which = 4,main = "AIC influencial points: Cook distance")
-plot(base.BIC,which = 4,main = "BIC influencial points: Cook distance")
-plot(base.AIC,which = 5,main = "AIC influencial points: leverage")
-plot(base.BIC,which = 5,main = "BIC influencial points: leverage")
-par(mfrow=c(1,1))
+plot(base.BIC)
 ```
 
-- Use BIC and AIC rule to choose variables, because BIC put more penalty to number of independent variables, so BIC chose less variables than AIC did. The best model of AIC is $$BODYFAT = -23.72+0.84*ABDOMEN-0.085*WEIGHT-1.66*WRIST+0.28*BICEPS+0.039*AGE$$
+- From aspect of residual plots, points're symmetrically distributed,  clustered towards the middle of the plot, and didn't have clear patterns in both models. This means no information remains in the residuals and assumption of equal variance is satisfied.
 
-The best model of BIC is $$BODYFAT = -23.99+0.88*ABDOMEN-0.087*WEIGHT-1.28*WRIST$$
-These two models have similar adjusted R-square, which are 0.7301 and 0.7259. 
+- From aspect of QQ-plots, most points are on the diagnol line of QQ-plot in both models. This means normal distribution assumption is also satisfied.
 
-- From aspect of residual plots, points're symmetrically distributed,  clustered towards the middle of the plot, and didn't have clear patterns in both models. This means no information remains in the residuals and assumption of equal variance is satisfied in both models.
+- From aspect of Cook's distance and leverage of all observations, we can see that 81,221 and 250 are relatively high influential points. However, after we deleted those points and use stepwise method again, they won't change chosen variables. What's more, there's nothing abnormal about those high influential points after we checked their values. So we decided to keep them.
 
-- From aspect of QQ-plots, most points are on the diagnol line of QQ-plot in both models. This means normal distribution assumption is also satisfied in both models.
 
-- From aspect of Cook's distance and leverage of all observations, we can see 54, 81 and 250 are relatively high influential points in the best model of AIC, while 81,221 and 250 are relatively high influential points in the best model of BIC. However, after we deleted those points and use stepwise method again, they won't change chosen variables. What's more, there's nothing abnormal about those high influential points after we checked their values. So we decided to keep them.
+```{r}
+library(car)
+sqrt(vif(base.BIC))
+```
 
 - Based on Occam's Razor principle, we chose the best model given by BIC rule, which is $$BODYFAT = -23.99+0.88*ABDOMEN-0.087*WEIGHT-1.28*WRIST$$.
 
 
-
 ```{r}
-predict(base.BIC,newdata=data.frame(ABDOMEN=90,WEIGHT=170,WRIST=18),interval="predict")
-confint(base.BIC)
+sqrt(vif(base.BIC))
 ```
 
 
+**Possible rule of thumb**:"90% of your circumsference of waist, minus 10% of weight, minus 130% of your circumsference of wrist, and minus 24."
+- This rule of thumb is close to our estimated model by constructing 95% confidence intervals.
+
+**Example Usage**: For a man who weights 170lb, with abdomen circumsference of 90cm and 15cm-wrist-circumsference, his bodyfat rate will be predicted as 17.81%. There is a 95% probability that his body fat is between 0.10% and 25.67%. 
+
+With rule of thumb, we get about 24.5% as the predicted bodyfat rate.
+
+**Inference about relationship**: All these three variables are significantly(at level of $\alpha = 0.05$) associated with bodyfat.What's more, they can explain over 70% of variation in BODYFAT. 1cm increase in abdomen circumsference will cause 0.9% increase in bodyfat rate, 1cm decrease in wrist circumsference will cause 1.3% increase in bodyfat rate and 1lb decrease in weight will cause 0.1% increase in bodyfat rate. 
+
+
+**Strength and weakness of model**: Although it has some drawbacks, we think multivariable linear regression model is a reasonable model for this dataset.
+
+1.Linearity assumption is reasonable based on residual plots.
+
+2.Normality assumption about errors is reasonable based on QQ plot, we showed above.
+
+3.Constant variance assumption is reasonable because residual plots doesn't have an obvious shape.
+
+4.R-square is larger than 0.7 and there're only 3 indepent variables in the model. This means this model refines most of information in the data and has a very simple form.
+
+5.Multivariable linear regression provides unbiased estimators of coefficients.
+
+6.Multicollinearity is a problem in this model. It could influence accuracy of estimator of standard error, decrease credibility of t-test and enlarge width of confidence interval. 
+
+Overall, our model provides a very simple way of predicting the body fat % based on weight, circumsference of waist and circumsference of wrist. However, because of its simplicity, our predictions aren't very precise because of multicollinearity.
 
