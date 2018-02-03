@@ -1,5 +1,6 @@
 #######################
 ## Explaratory Analysis
+# Set directory as the root working directory
 setwd("/home/cc886/OneDrive/RstudioWorkspace/STAT628_GM3")
 d <- read.csv("./data/BodyFat.csv")
 str(d)
@@ -88,4 +89,4 @@ plot(fit3) #  # 1.check_check42.png
 dev.off()
 # 79 looks good
 
-write.csv(d2, file = "CleanedBodyFat.csv")
+write.csv(d2, file = "./data/CleanedBodyFat.csv")

@@ -1,4 +1,5 @@
 library(tidyverse)
+library(ggplot2)
 data<-read.csv("BodyFat.csv")
 summary(data)
 par(mfrow=c(1,2))
