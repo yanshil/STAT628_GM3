@@ -1,13 +1,28 @@
-# STAT628_GM3
+# Body Fat - Rule of Thumb
 
-[Jupyter Documentation](https://jupyter.readthedocs.io/en/latest/index.html#)
+## Description
 
-[Jupyter R](https://www.datacamp.com/community/blog/jupyter-notebook-r)
+This repo is for course project of STAT 628 (Spring 2018, University of Wisconsin-Madiosn).
 
-[IRkernel](https://irkernel.github.io/)
+The goal is to get a *Rule of Thumb* to estimate body fat from commonly available measurements like weight, height and age. 
 
-### Jupyter Server setup
 
-[Running a notebook server](http://jupyter-notebook.readthedocs.io/en/latest/public_server.html)
+* `./code/`: All related code for analysis
+    * `code1.R`
+    * `code2/R`
+* `./data/`: The origin data
+* `./image/`: The generated figures. Including explaratory analysis and result visualization
+* `./ExecutiveSummary`: With an easy-to-read Jupyter Notebook summary
 
-[Jupyter GitHub Issue #84](https://github.com/jupyter/notebook/issues/2254)
+## Reproducible Requirements
+
+All code use is included in the `code` folder. The following packages are needed to be installed to run the code.
+
+```
+dplyr
+car
+knitr
+...
+```
+
+
