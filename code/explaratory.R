@@ -1,14 +1,11 @@
-## Explaratory
+#######################
+## Explaratory Analysis
 
 d <- read.csv("./data/BodyFat.csv")
-
+str(d)
 summary(d)
 
-plot(d$BODYFAT)
-plot(sort(d$BODYFAT))
-# Min = 0.0
-# Max = 45
-
+######################
 which(d$BODYFAT == 0)
 #182
 d$IDNO[182]
