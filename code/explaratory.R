@@ -63,6 +63,9 @@ summary(d)
 
 d <- d[-42,]
 
+
+d <- d[-39,]
+
 ## Prior?
 ## Wrist and Knee are not good measurement ?
 
