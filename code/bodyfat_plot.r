@@ -26,7 +26,8 @@ data %>% ggplot +
   scale_colour_manual(values = c("blue", "red")) +
   scale_size_manual(values =c(1, 4))+
   labs(x = "Index",y = colnames(data)[2])+
-  theme(legend.position = "none")
+  theme(legend.position = "none")+
+    ggtitle("scatter plot of bodyfat")
 
 #WEIGHT
 data %>% ggplot +
@@ -36,7 +37,8 @@ data %>% ggplot +
   scale_colour_manual(values = c("blue", "red")) +
   scale_size_manual(values =c(1, 4))+
   labs(x = "Index",y = colnames(data)[5])+
-  theme(legend.position = "none")
+  theme(legend.position = "none")+
+    ggtitle("scatter plot of weight")
 
 
 #HEIGHT
@@ -47,10 +49,17 @@ data %>% ggplot +
   scale_colour_manual(values = c("blue", "red")) +
   scale_size_manual(values =c(1, 4))+
   labs(x = "Index",y = colnames(data)[6])+
-  theme(legend.position = "none")
+  theme(legend.position = "none")+
+    ggtitle("scatter plot of height")
 
-par(mfrow=c(2,2))
-for( i in c(2,4,5,6)){
+par(mfrow=c(4,4))
+for( i in 2:17){
+    hist(data[,i],prob=FALSE,main=colnames(data[i]),col="lightblue")
+}
+
+
+par(mfrow=c(4,4))
+for( i in 2:17){
   hist(data[,i],prob=TRUE,main=colnames(data[i]),col="lightblue")
   lines(density(data[,i]), col="red", lwd=2) # add a density estimate with defaults
 }
