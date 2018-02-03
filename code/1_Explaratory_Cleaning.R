@@ -25,7 +25,9 @@ d <- d[-182,]
 fit <- lm(BODYFAT ~ .-IDNO-DENSITY, data=d)
 summary(fit)
 par(mfrow = c(2,2))
-plot(fit)   # 1_diag182.png
+png(filename = "./image/1_diag_182.png", width = 700, height = 900)
+plot(fit)
+dev.off()
 ##########################################
 ## Data Cleaning
 n <- dim(d)[1]
@@ -51,9 +53,11 @@ abline(v = 42, lty = 2)
 ####################################
 ## Check #42
 # 1_diag_check42.png
+png(filename = "./image/1_diag_check42.png", width = 700, height = 900)
 par(mfrow=c(1,2));
 plot(fit, which=4) ## Cook's distance
 plot(BMI); abline(v = 42, lty = 2); text(42,150,labels = "42",cex = 0.8)
+dev.off()
 #################################
 ## Try lm
 BodyFat <- read.csv("./data/BodyFat.csv")
@@ -67,14 +71,20 @@ fit1 <- lm(BODYFAT~.-IDNO-DENSITY,data = d1)
 summary(fit1)
 
 par(mfrow=c(2,2))
+png(filename = "./image/1_diag182_42.png", width = 700, height = 900)
 plot(fit1) # 1_diag182_42.png
-
+dev.off()
 
 fit2 <- lm(BODYFAT~.-IDNO-DENSITY,data = d2)
+png(filename = "./image/1_diag182_42_39.png", width = 700, height = 900)
 plot(fit2)  # 1_diag182_42_39.png
+dev.off()
 # ID39 is an leverage point
 
 fit3 <- lm(BODYFAT~.-IDNO-DENSITY,data = d3)
-plot(fit3) #  # 1_diag182_42_79.png
+png(filename = "./image/1_diag_check42.png", width = 700, height = 900)
+plot(fit3) #  # 1_diag_check42.png
+dev.off()
 # 79 looks good
 
+write.csv(d2, file = "CleanedBodyFat.csv")
