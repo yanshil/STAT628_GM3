@@ -22,6 +22,7 @@ All code use is included in the `code` folder. The following packages are needed
 dplyr
 car
 knitr
+corrplot
 ...
 ```
 
