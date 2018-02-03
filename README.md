@@ -10,7 +10,7 @@ The goal is to get a *Rule of Thumb* to estimate body fat from commonly availabl
 * `./code/`: All related code for analysis
     * `code1.R`
     * `code2/R`
-* `./data/`: The origin data
+* `./data/`: The origin data and its description
 * `./image/`: The generated figures. Including explaratory analysis and result visualization
 * `./ExecutiveSummary`: With an easy-to-read Jupyter Notebook summary
 
