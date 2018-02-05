@@ -16,10 +16,11 @@ Or
 
 http://jupyterslides.yansr.me/[filename].slides.html
 
-## About Online / Offline
 
-We failed to run the slides with images represented in `relative directory`. Thus we post the plots in `plotly` and a Linux Server.
+## Here we have
 
-Both version is in fact "online", with the `online` one have images with links from `plotly` and the `offline` one with links from the server.
+```
+jupyter nbconvert "./ExecutiveSummary/Slides_offlineVersion.ipynb" --to slides --post serve --ServePostProcessor.ip='*'
+```
+http://13.85.11.67:8000/Slides_offlineVersion.slides.html
 
-We would like to use the `online` version to do the presentation if the plots can be loaded successfully.
