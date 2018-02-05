@@ -1,4 +1,4 @@
-## Command Running on the Jupyter Notebook Server
+## Running the Slides
 
 1. Open the terminal
 2. Run the following command

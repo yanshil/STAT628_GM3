@@ -17,7 +17,7 @@ The goal is to get a *Rule of Thumb* to estimate body fat from commonly availabl
     * `CleanedBodyFat.csv`
 * `./image/`: The generated figures. Including explaratory analysis and result visualization
     * The numbers before graphs are corresponding to the code generated them. e.g. `./image/1.check42.png` is generated from `./code/1_Explaratory_Cleaning.R`
-* `./ExecutiveSummary`: With an easy-to-read Jupyter Notebook summary
+* `./ExecutiveSummary`: With aJupyter Notebook Executive Summary and the Slides for presentation.
 
 ## Reproducible Requirements
 
