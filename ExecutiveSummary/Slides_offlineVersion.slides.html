@@ -11914,7 +11914,7 @@ a.anchor-link {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Introduction">Introduction<a class="anchor-link" href="#Introduction">&#182;</a></h2><p>Many research indicates that the percentage of body fat is related to human health.</p>
-<p>In this report, we will limit our measurements to commonly available measurements such as age, weight, and height to provide a clear,accurate and easy to use "Rule of Thumb" to estimate body fat for daily use.</p>
+<p>In this presentation, we will provide a clear, accurate and easy to use "Rule of Thumb" to estimate body fat for daily use.</p>
 
 </div>
 </div>
@@ -11950,22 +11950,13 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Data-Background">Data Background<a class="anchor-link" href="#Data-Background">&#182;</a></h2><p>The data set contains 17 measurements from 252 observations. Except for the first three column seperately is <code>IDNO</code>(id number), <code>BODY FAT</code>(The first-class outcome), and <code>DENSITY</code>(The second-class outcome), the rest 13 measurements are commonly available measurements of human body, which will be used as possible predictors in the model.</p>
-
-</div>
-</div>
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Data-Background">Data Background<a class="anchor-link" href="#Data-Background">&#182;</a></h2><p>The data set contains 17 measurements from 252 observations.</p>
 <ul>
 <li><code>IDNO</code>: ID number</li>
-<li><code>BODY FAT</code>: first-class</li>
+<li><code>BODYFAT</code>: first-class</li>
 <li><code>DENSITY</code>: second-class</li>
 </ul>
-<p><em>If <code>body fat</code> is not valid, try to use <code>density</code> instead.</em></p>
+<p><em>If <code>bodyfat</code> is not valid, try to use <code>density</code> instead.</em></p>
 <p>The rest 14 measurements are commonly available measurements of human body, which will be used as possible predictors in the model.</p>
 
 </div>
@@ -11976,11 +11967,26 @@ a.anchor-link {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Outcome-Analysis">Outcome Analysis<a class="anchor-link" href="#Outcome-Analysis">&#182;</a></h3><p>Siri's Equation<cite data-cite="siri1956gross">(Siri, 1956)</cite> : $$B= 495/D - 450$$</p>
-<ul>
-<li>#182 : <code>BODYFAT</code> = 0</li>
-<li>#216: <code>BODYFAT</code> = 45.1</li>
-</ul>
-<p>If transformed from <code>DENSITY</code>, seperately -3.61 and 47.49.</p>
+<table>
+<thead><tr>
+<th>IDNO</th>
+<th>BODYFAT</th>
+<th>BODYFAT(translated from DENSITY)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>182</td>
+<td>0</td>
+<td>-3.61 (Still NOT VALID)</td>
+</tr>
+<tr>
+<td>216</td>
+<td>45.1</td>
+<td>47.49 (Not good to use)</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Fail to use <code>DENSITY</code> instead. Thus we </strong>delete<strong> these two observations from the data set.</strong></p>
 <!--bibtex
 
@@ -11996,21 +12002,14 @@ a.anchor-link {
 </div>
 </div>
 </div></section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Outliers-&amp;-Influential-Points">Outliers &amp; Influential Points<a class="anchor-link" href="#Outliers-&amp;-Influential-Points">&#182;</a></h4><p>By analysing the Cook's distance of the linear model build from <code>lm(BODYFAT ~ .)</code>(all possible $X$ dispite of <code>ID</code> and <code>DENSITY</code>), we look into details of the outlier candidates with ID 42, 39 and 86.</p>
-
-</div>
-</div>
-</div></section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-r"><pre><span></span>fit <span class="o">&lt;-</span> lm<span class="p">(</span>BODYFAT <span class="o">~</span> <span class="m">.</span><span class="o">-</span>IDNO<span class="o">-</span>DENSITY<span class="p">,</span> data<span class="o">=</span>BodyFat<span class="p">)</span>
+<div class=" highlight hl-r"><pre><span></span><span class="c1">## Outliers: Cook&#39;s Distance</span>
+
+fit <span class="o">&lt;-</span> lm<span class="p">(</span>BODYFAT <span class="o">~</span> <span class="m">.</span><span class="o">-</span>IDNO<span class="o">-</span>DENSITY<span class="p">,</span> data<span class="o">=</span>BodyFat<span class="p">)</span>
 BMI <span class="o">&lt;-</span>  BodyFat<span class="o">$</span>WEIGHT <span class="o">*</span> <span class="m">0.453592</span> <span class="o">/</span> <span class="p">(</span>BodyFat<span class="o">$</span>HEIGHT<span class="o">*</span><span class="m">2.54</span><span class="o">*</span><span class="m">0.01</span><span class="p">)</span><span class="o">^</span><span class="m">2</span>
 <span class="kp">options</span><span class="p">(</span>repr.plot.width<span class="o">=</span><span class="m">8</span><span class="p">,</span> repr.plot.height<span class="o">=</span><span class="m">3.5</span><span class="p">);</span> par<span class="p">(</span>mfrow<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">));</span>
 plot<span class="p">(</span>fit<span class="p">,</span> which<span class="o">=</span><span class="m">4</span><span class="p">)</span> <span class="c1">## Cook&#39;s distance</span>
@@ -12360,17 +12359,6 @@ CKJgUGAEUTAoMIIoGBQYQRQMCowgCgYFRhAF8/9PgGyn90vXmgAAAABJRU5ErkJggg=="
 </div>
 </div>
 
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Observation #42 is weighted 205 lb and 29.5 in tall. Body Mass Index (BMI) is commonly used to classify underweight, overweight and obesity in adults.</p>
-<p>Usually a person with BMI $&gt;=$ 40 is considered to be extreme obese <a href="http://apps.who.int/bmi/index.jsp?introPage=intro_3.html">(WHO 
-BMI classification)</a>. When we calculate the BMI, we can see that this observation is very abnormal with BMI = 165.62, so we consider this observation as an invalid record and delete it from the model.</p>
-
-</div>
-</div>
 </div></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12421,8 +12409,7 @@ BMI classification)</a>. When we calculate the BMI, we can see that this observa
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Example:-#39">Example: #39<a class="anchor-link" href="#Example:-#39">&#182;</a></h3><p>Obs. 39 is a very fat guy with most of his record as the maximum one in the data and by the Scale-Location plots below, we can see that #39 has an extreme residuals. Thus we consider to delete it from the dataset to obtain a robust result.</p>
-
+<h3 id="Example:-#39">Example: #39<a class="anchor-link" href="#Example:-#39">&#182;</a></h3>
 </div>
 </div>
 </div></section><section>
@@ -14573,15 +14560,8 @@ AElFTkSuQmCC"
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>Based on Occam's Razor principle, we chose the best model given by BIC rule, which is 
-$$BODY FAT \%= -23.99+0.88*ABDOMEN-0.087*WEIGHT-1.28*WRIST$$.</li>
-</ul>
-<h4 id="Possible-rule-of-thumb">Possible rule of thumb<a class="anchor-link" href="#Possible-rule-of-thumb">&#182;</a></h4><blockquote><p>90% of your circumsference of waist, minus 10% of weight, minus 130% of your circumsference of wrist, and minus 24.</p>
-</blockquote>
-<ul>
-<li>This rule of thumb is close to our estimated model by constructing 95% confidence intervals.</li>
-</ul>
+<h1 id="Final-model">Final model<a class="anchor-link" href="#Final-model">&#182;</a></h1><p>$$BODY FAT \%= -23.99+0.88*ABDOMEN-0.087*WEIGHT-1.28*WRIST$$</p>
+<h4 id="rule-of-thumb">rule of thumb<a class="anchor-link" href="#rule-of-thumb">&#182;</a></h4><p><strong>90% of your circumsference of waist, minus 10% of weight, minus 130% of your circumsference of wrist, and minus 24.</strong></p>
 
 </div>
 </div>
@@ -14590,9 +14570,8 @@ $$BODY FAT \%= -23.99+0.88*ABDOMEN-0.087*WEIGHT-1.28*WRIST$$.</li>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Example-Usage">Example Usage<a class="anchor-link" href="#Example-Usage">&#182;</a></h4><p>For a man who weights 170lb, with abdomen circumsference of 90cm and 15cm-wrist-circumsference, his bodyfat rate will be predicted as 17.81%. There is a 95% probability that his body fat is between 0.10% and 25.67%.</p>
-<p>With rule of thumb, we get about 24.5% as the predicted bodyfat rate.</p>
-
+<h1 id="Example-Usage">Example Usage<a class="anchor-link" href="#Example-Usage">&#182;</a></h1><h3 id="For-a-man-who-weights-170lb,-with-waist-circumsference-of-90cm-and-15cm-wrist-circumsference">For a man who weights 170lb, with waist circumsference of 90cm and 15cm-wrist-circumsference<a class="anchor-link" href="#For-a-man-who-weights-170lb,-with-waist-circumsference-of-90cm-and-15cm-wrist-circumsference">&#182;</a></h3><h3 id="his-bodyfat-rate-will-be-predicted-as-17.81%.**">his bodyfat rate will be predicted as 17.81%.**<a class="anchor-link" href="#his-bodyfat-rate-will-be-predicted-as-17.81%.**">&#182;</a></h3><p>There is a 95% probability that his body fat is between 0.10% and 25.67%.</p>
+<h3 id="With-rule-of-thumb,-we-get-about-24.5%-as-the-predicted-bodyfat-rate.**">With rule of thumb, we get about 24.5% as the predicted bodyfat rate.**<a class="anchor-link" href="#With-rule-of-thumb,-we-get-about-24.5%-as-the-predicted-bodyfat-rate.**">&#182;</a></h3>
 </div>
 </div>
 </div></section><section>
@@ -14601,8 +14580,6 @@ $$BODY FAT \%= -23.99+0.88*ABDOMEN-0.087*WEIGHT-1.28*WRIST$$.</li>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Inference-about-relationship">Inference about relationship<a class="anchor-link" href="#Inference-about-relationship">&#182;</a></h4><ul>
-<li>All these three variables are significantly(at level of $\alpha = 0.05$) associated with bodyfat.</li>
-<li>They can explain over <code>70%</code> of variation in BODYFAT. </li>
 <li>1cm increase in abdomen circumsference will cause <strong>0.9% increase</strong> in bodyfat rate.</li>
 <li>1cm increase in wrist circumsference will cause <strong>1.3% decrease</strong> in bodyfat rate.</li>
 <li>1lb increase in weight will cause <strong>0.1% decrease</strong> in bodyfat rate. </li>
@@ -14615,8 +14592,7 @@ $$BODY FAT \%= -23.99+0.88*ABDOMEN-0.087*WEIGHT-1.28*WRIST$$.</li>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Strength">Strength<a class="anchor-link" href="#Strength">&#182;</a></h4><p>Although it has some drawbacks, we think multivariable linear regression model is a reasonable model for this dataset.</p>
-<p>1.<strong>Linearity assumption</strong> is reasonable based on previous scatter plots.</p>
+<h4 id="Strength">Strength<a class="anchor-link" href="#Strength">&#182;</a></h4><p>1.<strong>Linearity assumption</strong> is reasonable based on previous scatter plots.</p>
 <p>2.<strong>Normality assumption</strong> about errors is reasonable based on QQ plot, we showed above.</p>
 <p>3.<strong>Constant variance assumption</strong> is reasonable because residual plots doesn't have an obvious shape.</p>
 <p>4.<strong>R-square</strong> is larger than 0.7 and there're only 3 indepent variables in the model. This means this model refines most of information in the data and has a very simple form.</p>

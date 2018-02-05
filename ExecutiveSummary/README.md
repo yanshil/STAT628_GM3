@@ -20,6 +20,7 @@ http://jupyterslides.yansr.me/[filename].slides.html
 ## Here we have
 
 ```
+# netstat -tulpn
 jupyter nbconvert "./ExecutiveSummary/Slides_offlineVersion.ipynb" --to slides --post serve --ServePostProcessor.ip='*'
 ```
 http://13.85.11.67:8000/Slides_offlineVersion.slides.html
