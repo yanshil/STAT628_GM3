@@ -1,6 +1,8 @@
+## Author: Peijin Li
+
 library(tidyverse)
 library(ggplot2)
-data<-read.csv("BodyFat.csv")
+data<-read.csv("./data/BodyFat.csv")
 summary(data)
 par(mfrow=c(1,2))
 
@@ -52,6 +54,8 @@ data %>% ggplot +
   labs(x = "Index",y = colnames(data)[6])+
   theme(legend.position = "none")+
     ggtitle("scatter plot of height")
+
+ggplot(data = BodyFat) + geom_histogram(aes(x = BODYFAT))
 
 par(mfrow=c(4,4))
 for( i in 2:17){

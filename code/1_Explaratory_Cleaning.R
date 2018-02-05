@@ -1,3 +1,5 @@
+## Author: Yanshi Luo
+
 #######################
 ## Explaratory Analysis
 # Set directory as the root working directory

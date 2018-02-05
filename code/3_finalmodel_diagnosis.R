@@ -1,4 +1,6 @@
 
+## Author: Lan Wang
+
 ############################### Get the final model #############
 dat = read.csv("BodyFat.csv")
 datset = dat[-c(39,42,182),-c(1,3)]

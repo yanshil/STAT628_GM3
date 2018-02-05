@@ -1,3 +1,4 @@
+## Author: Lan Wang & Peijin Li
 
 ############################## read data, remove abnormal points ##################
 dat = read.csv("BodyFat.csv")
